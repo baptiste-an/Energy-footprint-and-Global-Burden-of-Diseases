@@ -36,6 +36,19 @@ def plt_rcParams():
 
 
 def fig_final():
+    """From the results files, creates density and regression plots for the figures of the main paper.
+
+    It includes diseases with R2>0.2 for incidence
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+
     fig, axes = plt.subplots(7, 5, figsize=(7.5, 10.208))
     k = 0
     s = 1
@@ -246,6 +259,19 @@ def fig_final():
 
 
 def fig_appendix():
+    """From the results files, creates density and regression plots for the Appendix.
+
+    It includes all diseases for incidence, YLDs, YLLs
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+
     for indicator in ["incidence", "YLDs", "YLLs"]:
         data = feather.read_feather("processed_data/GBD data " + indicator + ".feather").swaplevel()
         matplotlib.rc("xtick", labelsize=6)
@@ -318,6 +344,16 @@ def fig_appendix():
 
 
 def forest():
+    """Creates main forest plot from the results obtained with the r code.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     data_forest = pd.DataFrame()
     for ind in ["YLDs", "incidence", "prevalence", "YLLs"]:
         df = pd.read_excel("results/ma_results_" + ind + ".xlsx", index_col=0).rename(index=dictmod)
@@ -385,7 +421,16 @@ categories = [
 
 
 def forest_sect():
+    """Creates forest by category for the appendix.
 
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     for mod in categories:
         data_forest = pd.DataFrame()
         for ind in ["incidence", "YLDs", "YLLs"]:

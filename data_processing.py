@@ -301,6 +301,16 @@ def rename_region(df, level="LOCATION"):
 
 
 def footprint():
+    """Download data from eora and save it in .feather format.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     df = pd.DataFrame()
     for i in range(1990, 2022, 1):
         url = "https://worldmrio.com/ComputationsM/Phase199/Loop082/leontief/tradereport_" + str(i) + ".txt"
@@ -318,6 +328,16 @@ def footprint():
 
 
 def data_GBD():
+    """Unzip GBD data and save it in .feather format.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     df = pd.DataFrame()
     for j in range(1, 14, 1):
         zf = zipfile.ZipFile("raw_data/GBD/IHME-GBD_2019_DATA-939f6de0/IHME-GBD_2019_DATA-939f6de0-" + str(j) + ".zip")

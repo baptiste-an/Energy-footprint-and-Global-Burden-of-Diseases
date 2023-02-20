@@ -5,8 +5,10 @@ from scipy import stats
 
 from data_processing import rename_region
 
+# energy data
 footprint = rename_region(feather.read_feather("processed_data/energy footprint.feather"), level="Country Name")
 
+# population data
 pop = rename_region(
     pd.read_csv("raw_data/World Bank/pop.csv", header=[2], index_col=[0])[[str(i) for i in range(1990, 2020, 1)]],
     level="Country Name",
@@ -14,6 +16,7 @@ pop = rename_region(
 pop.columns = [int(i) for i in pop.columns]
 pop.loc["Taiwan"] = pd.read_excel("raw_data/pop Taiwan.xls", header=0, index_col=0)["TW"]
 
+# energy per capita
 GJcap = (
     footprint.drop(
         [
@@ -38,32 +41,7 @@ GJcap = (
     * 1000
 ).drop([2020, 2021], axis=1)
 
-
-GJcap_world = (
-    footprint.drop(
-        [
-            "Antigua",
-            "Z - Aggregated categories",
-            "Gaza Strip",
-            "Netherlands Antilles",
-            "United Arab Emirates",
-        ]
-    ).sum()
-    / pop.loc[
-        footprint.drop(
-            [
-                "Antigua",
-                "Z - Aggregated categories",
-                "Gaza Strip",
-                "Netherlands Antilles",
-                "United Arab Emirates",
-            ]
-        ).index
-    ].sum()
-    * 1000
-).drop([2020, 2021])
-
-
+# energy per capita without regions not in GBD
 energy = GJcap.drop(
     [
         "Aruba",
@@ -79,6 +57,18 @@ energy = GJcap.drop(
 
 
 def data_for_meta_analysis():
+    """Calculates regressions for the whole 1990-2019 period.
+
+    Saves it in "results/data_for_ma_indicator.xlsx" and "results/result_all.xlsx"
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     codebook = (
         (pd.read_excel("processed_data/codebook_short.xlsx", index_col=1).sort_index())
         # .loc[feather.read_feather("GBD data 2/GBD data incidence.feather").unstack(level=0).index]
@@ -168,7 +158,18 @@ def data_for_meta_analysis():
 
 
 def data_for_meta_analysis_all_years():
+    """Calculates regressions for each year during 1990-2019 period.
 
+    Adds yearly results in sheets from "results/data_for_ma_indicator.xlsx"
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     energy = GJcap.drop(
         [
             "Aruba",
@@ -307,6 +308,18 @@ dictmod = dict(zip(mod1, mod2))
 
 
 def tables():
+    """From "results/data_for_ma_indicator.xlsx", exports incidence data with positive correlation and negative correlation to "results/results_incidence_neg.xlsx" and "results/results_incidence_pos.xlsx"
+
+    These files will be used for the main plots of the paper.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     indicator = "incidence"
     df = pd.read_excel(
         "results/data_for_ma_" + indicator + ".xlsx", sheet_name="all_years", index_col=[0, 1, 7]
