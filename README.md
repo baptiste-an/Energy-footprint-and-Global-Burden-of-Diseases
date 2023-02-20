@@ -18,12 +18,12 @@ Follow the steps in the runme.py file.
 The steps are:
 
 * process the data so that Eora and GBD data are in the same format
-* calculate regression coefficients
-* run functions from exiobase_functions.py to calculate the footprints
-* run functions from sankey_function.py to generate files that will be used as inputs for building the sankey diagrams
-* run save_sankey() from fig_sankey.py to generation sankey figures and save them in Results/Sankey_figs
+* calculate regression coefficients and export them to excel format
+* plot all regression graphs
+* run the r code for the meta analyses
+* plot the meta analysis forest plots
 
 
 ## Citation
 
-Andrieu, B., Le Boulzec, H., Delannoy, L., Verzier, F., Winter, G., Vidal, O., Mapping global greenhouse gases emissions: an interactive, open-access, web application. Available at:
+Andrieu, B., Marrauld, L., Chevance, G., Egnell, M., Vidal, O., Boyer, L., Fond, G., Energy footprint and Global Burden of Disease: an analysis of 176 countries over the period 1990-2019. Available at:

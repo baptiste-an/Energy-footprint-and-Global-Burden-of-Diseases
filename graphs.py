@@ -359,7 +359,7 @@ def forest():
     plt.show()
 
 
-mod1 = [
+categories = [
     "HIV/AIDS and sexually transmitted infections",
     "Respiratory infections and tuberculosis",
     "Enteric infections",
@@ -376,7 +376,6 @@ mod1 = [
     "Substance use disorders",
     "Diabetes and kidney diseases",
     "Skin and subcutaneous diseases",
-    "Sense organ diseases",
     "Musculoskeletal disorders",
     "Other non-communicable diseases",
     "Transport injuries",
@@ -387,9 +386,50 @@ mod1 = [
 
 def forest_sect():
 
-    for mod in mod1:
+    for mod in categories:
         data_forest = pd.DataFrame()
         for ind in ["incidence", "YLDs", "YLLs"]:
+            df = pd.read_excel("results/ma_results_" + ind + ".xlsx", index_col=0)
+            df.loc["year"] = [i[1:5] for i in df.columns]
+            df.loc["indicator"] = [i[6:] for i in df.columns]
+            df = df.T.reset_index().set_index(["year", "indicator"]).drop("index", axis=1).T.drop("ll_y", axis=1)
+            data_forest[ind] = df.unstack()
+        df3 = data_forest.unstack().T
+        df3 = df3.swaplevel().loc[dictmod[mod]].stack(level=0)
+
+        df3["label"] = "      " + df3.index.get_level_values(level=1)
+        df3["group"] = df3.index.get_level_values(level=0)
+
+        matplotlib.rcdefaults()
+        ax = fp.forestplot(
+            df3,  # the dataframe with results data
+            estimate="estimate",  # col containing estimated effect size
+            ll="ci.lb",
+            hl="ci.ub",  # columns containing conf. int. lower and higher limits
+            varlabel="label",  # column containing variable label
+            # pval="pval",
+            groupvar="group",
+            xlabel="Pearson correlation",  # x-label title
+            capitalize="capitalize",
+            # rightannote=["formatted_pval"],  # columns to report on right of plot
+            # right_annoteheaders=["P-value"],  # ^corresponding headers
+            # sort=True,
+            figsize=(6, 22),
+            color_alt_rows=True,
+            ylabel=dictmod[mod],
+            **{
+                "markercolor": "black",
+            }
+        )
+        ax.tick_params(axis="y", pad=250)
+        lines = ax.get_lines()
+        for line in lines[1:3]:
+            line.set_xdata([-1, -0.5])
+        plt.savefig("results/Appendix/" + dictmod[mod][:4] + ".png", bbox_inches="tight")
+        plt.show()
+    for mod in ["Sense organ diseases"]:
+        data_forest = pd.DataFrame()
+        for ind in ["YLDs"]:
             df = pd.read_excel("results/ma_results_" + ind + ".xlsx", index_col=0)
             df.loc["year"] = [i[1:5] for i in df.columns]
             df.loc["indicator"] = [i[6:] for i in df.columns]
