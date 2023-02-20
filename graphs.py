@@ -320,7 +320,7 @@ def fig_appendix():
 def forest():
     data_forest = pd.DataFrame()
     for ind in ["YLDs", "incidence", "prevalence", "YLLs"]:
-        df = pd.read_excel("ma_results_" + ind + ".xlsx", index_col=0).rename(index=dictmod)
+        df = pd.read_excel("results/ma_results_" + ind + ".xlsx", index_col=0).rename(index=dictmod)
         df.loc["year"] = [i[1:5] for i in df.columns]
         df.loc["indicator"] = [i[6:] for i in df.columns]
         df = df.T.reset_index().set_index(["year", "indicator"]).drop("index", axis=1).T
@@ -354,9 +354,35 @@ def forest():
     lines = ax.get_lines()
     for line in lines[1:3]:
         line.set_xdata([-1.73, -0.43])
-    plt.savefig("ma2.pdf", bbox_inches="tight")
-    plt.savefig("ma2.svg", bbox_inches="tight")
+    plt.savefig("results/meta-analysis.pdf", bbox_inches="tight")
+    plt.savefig("results/meta-analysis.svg", bbox_inches="tight")
     plt.show()
+
+
+mod1 = [
+    "HIV/AIDS and sexually transmitted infections",
+    "Respiratory infections and tuberculosis",
+    "Enteric infections",
+    "Neglected tropical diseases and malaria",
+    "Other infectious diseases",
+    "Maternal and neonatal disorders",
+    "Nutritional deficiencies",
+    "Neoplasms",
+    "Cardiovascular diseases",
+    "Chronic respiratory diseases",
+    "Digestive diseases",
+    "Neurological disorders",
+    "Mental disorders",
+    "Substance use disorders",
+    "Diabetes and kidney diseases",
+    "Skin and subcutaneous diseases",
+    "Sense organ diseases",
+    "Musculoskeletal disorders",
+    "Other non-communicable diseases",
+    "Transport injuries",
+    "Unintentional injuries",
+    "Self-harm and interpersonal violence",
+]
 
 
 def forest_sect():
@@ -364,7 +390,7 @@ def forest_sect():
     for mod in mod1:
         data_forest = pd.DataFrame()
         for ind in ["incidence", "YLDs", "YLLs"]:
-            df = pd.read_excel("ma_results_" + ind + ".xlsx", index_col=0)
+            df = pd.read_excel("results/ma_results_" + ind + ".xlsx", index_col=0)
             df.loc["year"] = [i[1:5] for i in df.columns]
             df.loc["indicator"] = [i[6:] for i in df.columns]
             df = df.T.reset_index().set_index(["year", "indicator"]).drop("index", axis=1).T.drop("ll_y", axis=1)
@@ -400,6 +426,5 @@ def forest_sect():
         lines = ax.get_lines()
         for line in lines[1:3]:
             line.set_xdata([-1, -0.5])
-        plt.savefig("results/" + dictmod[mod][:4] + ".pdf", bbox_inches="tight")
-        plt.savefig("results/" + dictmod[mod][:4] + ".png", bbox_inches="tight")
+        plt.savefig("results/Appendix/" + dictmod[mod][:4] + ".png", bbox_inches="tight")
         plt.show()

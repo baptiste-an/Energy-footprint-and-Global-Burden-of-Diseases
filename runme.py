@@ -2,25 +2,25 @@
 
 from data_processing import *
 
-footprint()
-data_GBD()
+# footprint()
+# data_GBD()
 
 
 ### Regression calculations
 
 from calculations import *
 
-data_for_meta_analysis()
-data_for_meta_analysis_all_years()
-tables()
+# data_for_meta_analysis()
+# data_for_meta_analysis_all_years()
+# tables()
 
 ### graphs part 1
 
 from graphs import *
 
-plt_rcParams()
-fig_final()
-fig_appendix()
+# plt_rcParams()
+# fig_final()
+# fig_appendix()
 
 ### meta analysis
 
@@ -30,5 +30,5 @@ fig_appendix()
 
 ### graphs part 2
 
-forest()
+# forest()
 forest_sect()

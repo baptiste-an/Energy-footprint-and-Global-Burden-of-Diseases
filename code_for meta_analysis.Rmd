@@ -1,7 +1,7 @@
 ---
 title: "GBD and energy"
-author: "Guillaume Chevance"
-date: "January 2023"
+author: "Guillaume Chevance, Baptiste Andrieu"
+date: "February 2023"
 output:
   pdf_document:
     toc: yes
@@ -14,7 +14,7 @@ output:
     theme: cerulean
 ---
 
-## SET-UP (la librairie des packages necessaires pour executer le code)
+## SET-UP (libraries necessary to run code)
 
 ```{r message=FALSE}
 install.packages(c("metafor", "dplyr","readxl", "ggplot2","xlsx"))
@@ -24,128 +24,16 @@ library(readxl)
 library(ggplot2)
 library(xlsx)
 #getwd()
-#setwd("/Users/guillaumechevance/Documents/RESEARCH/COLLAB/2023/Baptiste/data")
-#setwd("C:/Users/andrieba/Documents/GitHub/Re__Résultats_Meta-analyses")
+#setwd("C:/Users/...")
 ```
 
-# DATA
-```{r message=FALSE}
-data <- read_excel("data_ma.xlsx") #ici copie le lien du fichier 
-
-#quelques trucs pour avoir des infos sur le fichier 
-unique(data$Disease)
-unique(data$mod)
-
-hist(data$r)
-boxplot(data$r)
-
-data %>%
-group_by(mod) %>%
-summarise(Count = n())
-```
-
-# Models comparison
-```{r message=FALSE}
-#te prends pas la tete avec ca - je test des modeles juste pour comprendre les data - je pourrais t'expliquer en visio
-
-ma_not_multi <- rma(r, sdr, data=data)
-summary(ma_not_multi,digits=3)
-
-ma_not_multi2 <- rma(r, sdr, method="EE", data=data)
-summary(ma_not_multi2,digits=3)
-
-ma_multi <- rma.mv(r, sdr, random = list(~1|mod, ~1|Disease), 
-       tdist = TRUE, data=data)
-summary(ma_multi,digits=3)
-```
-
-# MA per disease
-```{r message=FALSE}
-
-#ici toutes les meta analyses par categorie - si tu rajoutes une colonne "mod2" tu peux tester tes autres moderateurs ; eg: subset = mod2=="ta categorie" / pour le output  ce serait plus simple qu'on en  discute  mais en gros la ligne model result  te donne les infos principales 
-
-ma_HIV <- rma(r, sdr, data=data, subset = mod=="HIV-AIDS and sexually transmitted infections")
-summary(ma_HIV,digits=3)
-
-ma_respi <- rma(r, sdr, data=data, subset = mod=="Respiratory infections and tuberculosis")
-summary(ma_respi,digits=3)
-
-ma_Enteric <- rma(r, sdr, data=data, subset = mod=="Enteric infections")
-summary(ma_Enteric,digits=3)
-
-ma_tropi <- rma(r, sdr, data=data, subset = mod=="Neglected tropical diseases and malaria")
-summary(ma_tropi,digits=3)
-
-ma_other_infec <- rma(r, sdr, data=data, subset = mod=="Other infectious diseases")
-summary(ma_other_infec,digits=3)
-
-ma_mat <- rma(r, sdr, data=data, subset = mod=="Maternal and neonatal disorders")
-summary(ma_mat,digits=3)
-
-ma_nut <- rma(r, sdr, data=data, subset = mod=="Nutritional deficiencies")
-summary(ma_nut,digits=3)
-
-ma_neoplasms <- rma(r, sdr, data=data, subset = mod=="Neoplasms")
-summary(ma_neoplasms,digits=3)
-
-ma_muscul <- rma(r, sdr, data=data, subset = mod=="Musculoskeletal disorders")
-summary(ma_muscul,digits=3)
-
-ma_other_ncd <- rma(r, sdr, data=data, subset = mod=="Other non-communicable diseases")
-summary(ma_other_ncd,digits=3)
-
-ma_dig <- rma(r, sdr, data=data, subset = mod=="Digestive diseases")
-summary(ma_dig,digits=3)
-
-ma_neuro <- rma(r, sdr, data=data, subset = mod=="Neurological disorders")
-summary(ma_neuro,digits=3)
-
-ma_sub <- rma(r, sdr, data=data, subset = mod=="Substance use disorders")
-summary(ma_sub,digits=3)
-
-ma_diab <- rma(r, sdr, data=data, subset = mod=="Diabetes and kidney diseases")
-summary(ma_diab,digits=3)
-
-ma_skin <- rma(r, sdr, data=data, subset = mod=="Skin and subcutaneous diseases")
-summary(ma_skin,digits=3)
-
-ma_trans <- rma(r, sdr, data=data, subset = mod=="Transport injuries")
-summary(ma_trans,digits=3)
-
-ma_unint <- rma(r, sdr, data=data, subset = mod=="Unintentional injuries")
-summary(ma_unint,digits=3)
-
-ma_selfh <- rma(r, sdr, data=data, subset = mod=="Self-harm and interpersonal violence")
-summary(ma_selfh,digits=3)
-```
-
-# Meta forest
-```{r message=FALSE}
-#je  rentre les  resultats manuellement  dans  un autre fichier pour creer le forest plot  - tu  peux faire  la meme pour les autres moderateurs / sous-categories 
-
-forest <- read_excel("forest.xlsx")
-#class(forest$cilb)
-forest$estimate <- as.numeric(forest$estimate)
-forest$ciub <- as.numeric(forest$ciub)
-forest$cilb <- as.numeric(forest$cilb)
-
-ggplot(data=forest, aes(y=index, x=estimate, xmin=cilb, xmax=ciub)) +
-  geom_point() + 
-  geom_errorbarh() +
-  scale_y_continuous(name = "", breaks=1:nrow(forest), labels=forest$disease) +
-  labs(title='Effect Size by Disease', x='Effect Size', y = 'Disease') +
-  geom_vline(xintercept=0, color='black', linetype='dashed', alpha=.5) +
-  theme_classic()
-
-```
-# MA per disease
+# Meta analysis per disease
 ```{r message=FALSE}
   
 
-
 for (indicator in c("incidence", "prevalence", "YLDs", "YLLs"))
 {
-  data <- read_excel(paste("data_for_ma_",indicator,".xlsx",sep=""),sheet = 'all_years')
+  data <- read_excel(paste("results/data_for_ma_",indicator,".xlsx",sep=""),sheet = 'all_years')
   mydata <- data.frame(row.names =  c(paste('all_y','estimate'),paste('all_y','se'),paste('all_y',"ci.lb"),paste('all_y',"ci.ub"),paste('all_y',"pval")))
 for (i in as.list(unique(data$mod)))
   {
@@ -157,8 +45,8 @@ for (i in as.list(unique(data$mod)))
   df <- t(mydata)
   for (year in c(seq(1990,2019)))
   {
-    data <-read_excel(paste("data_for_ma_",indicator,".xlsx",sep=""),sheet = as.character(year))
-    mydata <- data.frame(row.names = c(paste(year,'estimate')helm',paste(year,'se'),paste(year,"ci.lb"),paste(year,"ci.ub"),paste(year,"pval")))
+    data <-read_excel(paste("results/data_for_ma_",indicator,".xlsx",sep=""),sheet = as.character(year))
+    mydata <- data.frame(row.names = c(paste(year,'estimate'),paste(year,'se'),paste(year,"ci.lb"),paste(year,"ci.ub"),paste(year,"pval")))
     for (i in as.list(unique(data$mod)))
     {
       ma<-rma(rvalue, sei=stderr, data=data, subset = mod==i,control=list(stepadj=0.5, maxiter=10000))
@@ -168,7 +56,7 @@ for (i in as.list(unique(data$mod)))
     }
     df <-cbind(df,t(mydata))
   }
-  write.xlsx(data.frame(df),paste("ma_results_",indicator,".xlsx",sep=""),col.names = TRUE, row.names = TRUE)
+  write.xlsx(data.frame(df),paste("results/ma_results_",indicator,".xlsx",sep=""),col.names = TRUE, row.names = TRUE)
 }
 
 

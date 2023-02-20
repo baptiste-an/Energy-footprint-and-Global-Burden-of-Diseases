@@ -78,127 +78,6 @@ energy = GJcap.drop(
 )
 
 
-index_negative = [
-    "Typhoid fever",
-    "Rabies",
-    "Malaria",
-    "Tetanus",
-    "Diphtheria",
-    "HIV-AIDS - Drug-susceptible Tuberculosis",
-    "Invasive Non-typhoidal Salmonella (iNTS)",
-    "Multidrug-resistant tuberculosis without extensive drug resistance",
-    "Drug-susceptible tuberculosis",
-    "Yellow fever",
-    "Leprosy",
-    "Acute hepatitis B",
-    "Meningitis",
-    "Syphilis",
-    "Whooping cough",
-    "Lower respiratory infections",
-    "Diarrheal diseases",
-    "Acute hepatitis C",
-    "Encephalitis",
-    "Acute hepatitis E",
-    "Trichomoniasis",
-    "Acute hepatitis A",
-    ##
-    "Maternal hypertensive disorders",
-    "Maternal hemorrhage",
-    "Maternal sepsis and other maternal infections",
-    "Maternal abortion and miscarriage",
-    "Ectopic pregnancy",
-    ##
-    "Hemolytic disease and other neonatal jaundice",
-    "Neonatal encephalopathy due to birth asphyxia and trauma",
-    "Neonatal sepsis and other neonatal infections",
-    "Neonatal preterm birth",
-    ##
-    "Vitamin A deficiency",
-    ##
-    "Neural tube defects",
-    "Congenital heart anomalies",
-    "Hemoglobinopathies and hemolytic anemias",
-    "Endometriosis",
-    ##
-    "Rheumatic heart disease",
-    "Intracerebral hemorrhage",
-    ##
-    "Dysthymia",
-    ##
-    "Dermatitis",
-    "Scabies",
-    ##
-    "Non-venomous animal contact",
-]
-
-
-index_positive = [
-    "Testicular cancer",
-    "Malignant skin melanoma",
-    "Non-melanoma skin cancer (basal-cell carcinoma)",
-    "Non-melanoma skin cancer (squamous-cell carcinoma)",
-    "Kidney cancer",
-    "Benign and in situ intestinal neoplasms",
-    "Chronic lymphoid leukemia",
-    "Myelodysplastic, myeloproliferative, and other hematopoietic neoplasms",
-    "Colon and rectum cancer",
-    "Acute lymphoid leukemia",
-    "Brain and central nervous system cancer",
-    "Non-Hodgkin lymphoma",
-    "Uterine cancer",
-    "Hodgkin lymphoma",
-    "Thyroid cancer",
-    "Bladder cancer",
-    "Multiple myeloma",
-    "Pancreatic cancer",
-    "Breast cancer",
-    "Tracheal, bronchus, and lung cancer",
-    "Prostate cancer",
-    "Ovarian cancer",
-    "Acute myeloid leukemia",
-    "Other malignant neoplasms",
-    ##
-    "Osteoarthritis hip",
-    ##
-    "Digestive congenital anomalies",
-    "Down syndrome",
-    "Urinary diseases and male infertility",
-    ##
-    "Non-rheumatic calcific aortic valve disease",
-    "Endocarditis",
-    "Peripheral artery disease",
-    ##
-    "Inflammatory bowel disease",
-    "Gallbladder and biliary diseases",
-    "Vascular intestinal disorders",
-    ##
-    "Parkinson's disease",
-    "Multiple sclerosis",
-    "Motor neuron disease",
-    "Tension-type headache",
-    ##
-    "Schizophrenia",
-    "Cocaine use disorders",
-    "Cannabis use disorders",
-    "Anorexia nervosa",
-    "Bulimia nervosa",
-    "Other drug use disorders",
-    "Attention-deficit/hyperactivity disorder",
-    "Chronic kidney disease due to hypertension",
-    ##
-    "Decubitus ulcer",
-    "Psoriasis",
-    "Other skin and subcutaneous diseases",
-    ##
-    "Falls",
-    "Poisoning by carbon monoxide",
-    "Other exposure to mechanical forces",
-    "Poisoning by other means",
-    "Other unintentional injuries",
-    "Adverse effects of medical treatment",
-]
-
-
 def data_for_meta_analysis():
     codebook = (
         (pd.read_excel("processed_data/codebook_short.xlsx", index_col=1).sort_index())
@@ -344,7 +223,7 @@ def data_for_meta_analysis_all_years():
                         y = df["y"]
 
                         regression = stats.linregress(x, y)
-                        if abs(regression[2]) != 1:
+                        if abs(regression[3]) != 0:
                             rvalue = rvalue.append(pd.DataFrame([regression[2]], index=[level]))
                             pvalue = pvalue.append(pd.DataFrame([regression[3]], index=[level]))
                             stderr = stderr.append(pd.DataFrame([regression[4]], index=[level]))
